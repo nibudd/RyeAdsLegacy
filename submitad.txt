@@ -1,0 +1,171 @@
+<div id="submitAd">
+	
+	<h3>Submit an Ad</h3>
+	
+	<?php
+				
+		// captcha stuff
+		require_once('recaptchalib.php');
+  		$publickey = "6LcajNUSAAAAAGY-jeBziVEOhrz1IhsCr2OihuSy";
+  		$privatekey = "6LcajNUSAAAAAHRYYTnavScjBOOjY2XJNTRX9Fxy";
+		
+		if (isset($_POST['poster'])) $ryersonEmail = isRyersonEmail($_POST['poster']);
+		
+		# was there a reCAPTCHA response?
+		if ($_POST["recaptcha_response_field"])
+       		$resp = recaptcha_check_answer ($privatekey,
+                                      			$_SERVER["REMOTE_ADDR"],
+                                      			$_POST["recaptcha_challenge_field"],
+                                      			$_POST["recaptcha_response_field"]);
+										
+        $captchaValid = $resp->is_valid;
+		
+		// displays form if nothing has been submitted yet
+		
+		if(!$ryersonEmail or !$captchaValid){
+			
+			?>
+	
+			<form action="<?php echo $_SERVER['PHP_SELF'].'?category='.$_GET['category']; ?>" method="POST">
+			
+				<label for="category">Category: </label>
+				<select name="category">
+					<option value="bikes" <?php if($row['category'] == 'bikes') echo ' selected'; ?>>Bikes</option>
+							<option value="books" <?php if($_POST['category'] == 'books') echo ' selected'; ?>>Books</option>
+							<option value="cars" <?php if($_POST['category'] == 'cars') echo ' selected'; ?>>Cars</option>
+							<option value="electronics" <?php if($_POST['category'] == 'electronics') echo ' selected'; ?>>Electronics</option>
+							<option value="employment" <?php if($_POST['category'] == 'employment') echo ' selected'; ?>>Employment</option>
+							<option value="furniture" <?php if($_POST['category'] == 'furniture') echo ' selected'; ?>>Furniture</option>
+							<option value="groupsandservices" <?php if($_POST['category'] == 'groupsandservices') echo ' selected'; ?>>Groups & Services</option>
+							<option value="housing" <?php if($_POST['category'] == 'housing') echo ' selected'; ?>>Housing</option>
+							<option value="musicvideoandsoftware" <?php if($_POST['category'] == 'musicvideoandsoftware') echo ' selected'; ?>>Music, Video & Software</option>
+							<option value="ridesharesandtransportation" <?php if($_POST['category'] == 'ridesharesandtransportation') echo ' selected'; ?>>Rideshares & Transportation</option>
+							<option value="tutoringandlessons" <?php if($_POST['category'] == 'tutoringandlessons') echo ' selected'; ?>>Tutoring & Lessons</option>
+				</select>
+				
+				<br /><br />
+				<label for="title">Title</label>
+				<br />
+				<input class="titleText" type="text" maxlength="50" name="title" value="<?php echo $_POST['title']; ?>">
+				
+				<br /><br />
+				<label for="message">Details</label>
+				<br />
+				<textarea cols="50" rows="5" maxlength="500" name="message"><?php echo $_POST['message']; ?></textarea>
+				
+				<br /><br />
+				<label for="poster">Ryerson email</label>
+				<br />
+				<input class='emailText' type="text" name="poster" value="<?php echo $_POST['poster']; ?>">
+				
+				<br /><br />
+			<?php 
+				// prints error message if a non-ryerson email was entered
+				if(!$ryersonEmail and isset($ryersonEmail)) echo 'Enter a valid Ryerson email';
+  				
+  				# was there a reCAPTCHA response?
+				if ($_POST["recaptcha_response_field"]) {
+       				$resp = recaptcha_check_answer ($privatekey,
+                                        			$_SERVER["REMOTE_ADDR"],
+                                        			$_POST["recaptcha_challenge_field"],
+                                        			$_POST["recaptcha_response_field"]);
+					
+					$_POST['captchaValid'] = $resp->is_valid;
+					
+        			if (!$resp->is_valid) {
+                		# set the error code so that we can display it
+                		echo "<br />Captcha error";
+                		$error = $resp->error;
+        			}
+				}
+  				
+  				echo recaptcha_get_html($publickey);
+			?>
+	
+				<br />
+				<input type="submit" name="submit" value="Submit">
+		
+			</form>
+			
+			<?php
+		}
+		
+		// when form has been submitted a success message is displayed and sent via email
+				
+		else{
+		
+			// create query to check refresh-repetitions
+				// strings start with \' automatically. removing them and then re-adding them seems to work
+			$_POST['title'] = str_replace("\'", "'", $_POST['title']);
+			$_POST['message'] = str_replace("\'", "'", $_POST['message']);
+			$query = 'SELECT * FROM `adverts` WHERE `title` = \''.str_replace("'", "\'", $_POST['title']).'\' AND `message` = \''.str_replace("'", "\'", $_POST['message']).'\' AND `poster` = \''.$_POST['poster'].'\' AND `category` = \''.$_POST['category'].'\'';
+			
+			// executing query to check for refresh-repetitions
+
+			$result = queryAndClose($query);
+
+    			// if the ad already exists, the form is not resubmitted
+    		
+    			if($result->num_rows > 0)
+    				echo "Ad already exists";
+    				
+    			else{
+			
+				// set unique randomized code based on first 10 characters of current time in seconds  since Unix Epoch (January 1 1970 00:00:00 GMT)
+				
+				$code = substr(bin2hex(mhash(MHASH_SHA512, time())), 0, 10);
+				
+				// create insertion query
+	
+				$query = 'INSERT INTO `adverts` (`id`, `date`, `title`, `message`, `poster`, `code`, `verified`, `category`) VALUES (\'\', NOW(), \''.str_replace("'", "\'",$_POST['title']).'\', \''.str_replace("'", "\'", $_POST['message']).'\', \''.$_POST['poster'].'\', \''.$code.'\', \'0\', \''.$_POST['category'].'\')';
+				
+				// create mysqli object
+				// open connection
+	
+				$mysqli = new mysqli($host, $user, $pass, $db);
+		
+				// check for connection errors
+	
+				if (mysqli_connect_errno()) die("Unable to connect!");
+		
+				// executing query to bring up ad for entered code
+
+				$result = $mysqli->query($query) or die ("Error in query: $query. ".mysqli_error($mysqli));
+			
+				// close connection
+	
+				$mysqli->close();
+				
+				// setting email variables
+				
+				$to = $_POST['poster'];
+				
+				$subject = 'Your submission to RyeAds.com has been saved';
+				
+				$message = '<html><body>'."\n\r";
+				$message .= 'Your submission, titled <strong>'.$_POST['title'].'</strong>, to RyeAds.com has been saved. To validate your ad so it can be viewed by the public, use the link below:<br />'."\n\r";
+				$message .= '<a href="http://ryeads.com/index.html?category=editpost&code='.$code.'">http://ryeads.com/index.html?category=editpost&code='.$code.'</a><br /><br />'."\n\r";
+				$message .= 'The following unique identifier code can be used at any time to edit your ad from <a href="http://ryeads.com">RyeAds.com</a>: <strong>'.$code.'</strong><br />'."\n\r";
+				$message .= '</html></body>';
+				
+				// To send HTML mail, the Content-type header must be set
+				$headers  = 'MIME-Version: 1.0' . "\r\n";
+				$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+				// Additional headers
+				$headers .= 'To: '.$_POST['poster']."\r\n";
+				$headers .= 'From: RyeAds <no-reply@ryeads.com>' . "\r\n";
+				$headers .= 'Reply-To: ' . "\r\n" .'X-Mailer: PHP/' . phpversion();
+   							
+				$sent = mail( $to, $subject, $message, $headers);
+
+			if($sent)
+				echo 'Your ad has been submitted and a message has been sent to <strong>'.$_POST['poster'].'</strong> for verification.<br /> Please check your email to validate your post for public viewing.<br />';
+			else
+				echo 'There was a problem sending your verification email.';
+			}
+		}
+		
+	?>
+	
+</div>

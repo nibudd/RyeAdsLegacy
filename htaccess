@@ -1,0 +1,38 @@
+AddType application/x-httpd-php5 .html .htm
+
+# Turn mod_rewrite on
+RewriteEngine On
+
+###### Rules
+
+# ryeads.com redirects to ryeads.com/alpha
+Rewriterule ^$ http://ryeads.com/alpha
+
+# ryeads.com/about stealths to ryeads.com/alpha/?q=about
+Rewriterule ^about?$ alpha/?q=about
+
+# ryeads.com/contact stealths to ryeads.com/alpha/?q=contact
+Rewriterule ^contact?$ alpha/?q=contact
+
+# ryeads.com/sponsors stealths to ryeads.com/alpha/?q=sponsors
+Rewriterule ^sponsors?$ alpha/?q=sponsors
+
+#ryeads.com/legacy stealths to ryeads.com/index.html
+RewriteRule ^legacy?$ index.html
+
+#ryeads.com/* stealths to ryeads.com/alpha
+RewriteRule ^([^/\.]+)/?$ alpha
+
+# Old Rules for RyeAds.com 1.0
+
+# ryeads.com/editad stealths to ryeads.com/editpost
+#RewriteRule ^editad/?$ editpost
+
+# ryeads.com/submitad stealths to ryeads.com/submitpost
+#RewriteRule ^submitad/?$ submitpost
+
+# ryeads.com/blah stealths to ryeads.com/index.html?category=blah
+#RewriteRule ^([^/\.]+)/?$ index.html?category=$1 [L]
+
+# ryeads.com/replyad/num stealths to ryeads.com/index.html?category=replyad&id=num
+#RewriteRule ^replyad/([^/\.]+)/?$ index.html?category=replyad&id=$1 [L]

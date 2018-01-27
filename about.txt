@@ -1,0 +1,18 @@
+<div id="about">
+	<h3>About</h3>
+	<p>
+		RyeAds is a classified ads website specifically for the students and faculty of Ryerson University in Toronto, Ontario.
+		It's an ongoing project produced by Nathan Budd, one of Ryerson's very own engineering students. It's Nathan's goal
+		that the community of Ryerson University will find this site as beneficial as he believes it can be - becoming 
+		the first place students look for used books, places to rent, and a lot more.
+	</p>
+	<p>
+		If you have any questions about the site, suggestions on how to make it better, or just want to get in touch with its creator, 
+		<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=contact">';?>click here</a>.
+	</p>
+	<h4>In the News</h4>
+	<p>
+		RyeAds was featured in the September 7 edition of the Ryerson Today <a target="_blank" href="http://www.ryerson.ca/ryersontoday/archive/201209/20120907.html">e-newsletter</a>,
+		and on September 11 in an article published by Ryerson's very own <a target="_blank" href="http://theeyeopener.com/2012/09/student-launches-ryerson-classifieds/">The Eyeopener</a>. 
+	</p>
+</div>

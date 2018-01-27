@@ -1,0 +1,12 @@
+<div id="header">
+	<div>
+		<h1>RyeAds</h1>
+		<h2>Classifieds for Ryerson, by Ryerson</h2>
+		<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=submitpost">';?>Submit an Ad</a>
+		<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=editpost">';?>Edit an Ad</a>
+		<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=about">';?>About</a>
+		<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=contact">';?>Contact</a>
+	</div>
+	<div>
+	</div>
+</div>

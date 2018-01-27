@@ -1,0 +1,104 @@
+<div id="contact">
+<h3>Contact</h3>
+<p>RyeAds is an ongoing project, produced by a fellow Ryerson student.<br />If you have any questions about the site, or comments for how to make it better, please send a message!</p>
+<?php
+	
+	// captcha stuff
+	require_once('recaptchalib.php');
+  	$publickey = "6LcajNUSAAAAAGY-jeBziVEOhrz1IhsCr2OihuSy";
+  	$privatekey = "6LcajNUSAAAAAHRYYTnavScjBOOjY2XJNTRX9Fxy";
+  	
+  	# was there a reCAPTCHA response?
+	if ($_POST["recaptcha_response_field"])
+    	$resp = recaptcha_check_answer ($privatekey,
+                                   			$_SERVER["REMOTE_ADDR"],
+                                   			$_POST["recaptcha_challenge_field"],
+                                   			$_POST["recaptcha_response_field"]);
+										
+    $captchaValid = $resp->is_valid;
+	
+	if(isset($_POST['replier'])) $validEmail = isValidEmail($_POST['replier']);
+	
+	// if the form hasn't yet been submitted or the supplied email is not valid, the form displayed
+		
+	if(!$validEmail or !$captchaValid){
+			
+		?>
+	
+			<form action="<?php echo $_SERVER['PHP_SELF'].'?category='.$_GET['category']; ?>" method="POST">
+			
+				<label for="replier">Your email</label>
+				<br />
+				<input class="emailText" type="text" name="replier" value="<?php echo $_POST['replier']; ?>">
+				<?php if(!$validEmail and isset($validEmail)) echo 'Enter a valid email address.'; ?>
+				
+				<br /><br />
+				<label for="reply">Your message</label>
+				<br />
+				<textarea cols="50" rows="5" name="reply"><?php echo $_POST['reply']; ?></textarea>
+				
+				<br /><br />
+			<?php
+				# was there a reCAPTCHA response?
+				if ($_POST["recaptcha_response_field"]) {
+       				$resp = recaptcha_check_answer ($privatekey,
+                                        			$_SERVER["REMOTE_ADDR"],
+                                        			$_POST["recaptcha_challenge_field"],
+                                        			$_POST["recaptcha_response_field"]);
+					
+					$_POST['captchaValid'] = $resp->is_valid;
+					
+        			if (!$resp->is_valid) {
+                		# set the error code so that we can display it
+                		echo "Captcha error";
+                		$error = $resp->error;
+        			}
+				}
+  				
+  				echo recaptcha_get_html($publickey);
+			?>	
+						
+				<br />
+				<input type="submit" name="submit" value="Submit">
+			</form>
+			
+		<?php
+	}
+	// when the form is submitted, a response is emailed and a success message is displayed
+	
+	else{
+		$_POST['reply'] = str_replace("\'", "'", $_POST['reply']);
+		
+		// setting email variables
+				
+		$to = $_POST['replier'].', admin@ryeads.com';
+				
+		$subject = 'Message to RyeAds Admin';
+				
+		$message = '<html><body>'."\n\r";
+		$message .= $_POST['reply']."\n\r";
+		$message .= '</html></body>';
+				
+		// To send HTML mail, the Content-type header must be set
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+		// Additional headers
+		$headers .= 'To: RyeAds Admin <admin@ryeads.com>'."\r\n";
+		$headers .= 'Cc: '.$_POST['replier']."\r\n";
+		$headers .= 'From: RyeAds <no-reply@ryeads.com>' . "\r\n";
+		$headers .= 'Reply-To: '.$_POST['replier'] . "\r\n" .'X-Mailer: PHP/' . phpversion();
+   							
+		$sent = mail( $to, $subject, $message, $headers);
+
+		if($sent){
+			echo 'Your message has been sent to the RyeAds admin team.<br />';
+			echo 'A copy of the message was sent to you at <strong>'.$_POST['replier'].'</strong>';
+		}
+		else
+			echo 'There was a problem sending your reply.';
+	
+		
+	}
+?>
+</div>

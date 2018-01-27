@@ -1,0 +1,62 @@
+<?php
+	
+	require 'functions.php';
+	
+	$category = ( !isset($_GET['category']) ? 'about' : $_GET['category'] ); //set page category
+	$file = setFile($category); //set file to load for main portion of page
+	$metaString = setMeta($category); //set meta/header info for page
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title><?php echo $metaString['title']; ?></title>
+
+	<link rel="stylesheet" href="style.css" type="text/css" />
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<meta name='keywords' content="<?php echo $metaString['keyword']; ?>" />
+	<meta name='description' content="<?php echo $metaString['description']; ?>" />
+	
+
+	<!--Google Analytics Stuff -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-34279412-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
+</head>
+<body>
+<div id='column'>
+
+	<!-- for Facebook Button -->
+	<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=181267415234261";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+	
+	<!-- HEADER -->
+	<?php require '/home/ryeadsco/public_html/header.txt'; ?>
+	
+	<!-- NAVBAR -->
+	<?php require '/home/ryeadsco/public_html/navbar.txt'; ?>
+	
+	<!-- MAIN BODY -->
+	<div id='main'>
+		<?php require $file; ?>
+	</div>
+</div>
+</body>
+</html>

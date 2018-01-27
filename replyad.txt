@@ -1,0 +1,96 @@
+<div id="replyAd">
+<?php
+		
+	// set query string for selected ad to be replied to
+	
+	$query = 'SELECT * FROM `adverts` WHERE `id` = \''.$_GET['id'].'\'';
+	
+	$result = queryAndClose($query);
+	
+	$row = $result->fetch_array();
+	
+	$date = explode(" ",$row['date']);	//splits timestamp into (date, time)
+	
+	echo '<div>'."\n";
+		
+	echo '</div>'."\n";
+	
+	echo '<div class="ad">'."\n";
+		echo '<div class="adTitle">'.$row['title'].'</div>'."\n";
+		echo '<div class="adDate">Posted: '.$date[0].'</div>'."\n";
+		echo '<div class="adMessage">'.$row['message'].'</div>'."\n";
+	echo '</div>'."\n";
+	
+	$validEmail = isValidEmail($_POST['replier']);
+	
+	if($_POST['submit'] == 'sent') echo 'Your reply has already been sent.';
+	
+	else{
+	
+		// if the form hasn't yet been submitted or the supplied email is not valid, the form displayed
+
+		if(!$validEmail){
+			
+			?>
+	
+				<form action="<?php echo $_SERVER['PHP_SELF'].'?category='.$_GET['category'].'&id='.$_GET['id']; ?>" method="POST">
+			
+					<br />
+					<label for="replier">Your Email</label>
+					<br />
+					<input type="text" name="replier">
+					<?php if(isset($_POST['submit'])) echo 'Enter a valid email address.'; ?>
+					
+					<br /><br />
+					<label for="reply">Enter your reply</label>
+					<br />
+					<textarea cols="50" rows="5" name="reply"></textarea>
+				
+					<input type="hidden" name="poster" value="<?php echo $row['poster']; ?>"> <!-- carries value of poster's email forward to the email message -->
+				
+					<br />
+					<input type="submit" name="submit" value="Submit">
+				</form>
+			
+			<?php
+		}
+		// when the form is submitted, a response is emailed and a success message is displayed
+	
+		else{
+			$_POST['reply'] = str_replace("\'", "'", $_POST['reply']);
+			
+			// setting email variables
+					
+			$to = $_POST['replier'];
+					
+			$subject = 'Someone\'s replied to your ad on RyeAds.com! - '.$row['title'];
+				
+			$message = '<html><body>'."\n\r";
+			$message .= $_POST['reply']."\n\r";
+			$message .= '</html></body>';
+				
+			// To send HTML mail, the Content-type header must be set
+			$headers  = 'MIME-Version: 1.0' . "\r\n";
+			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+	
+			// Additional headers
+			$headers .= 'From: RyeAds <no-reply@ryeads.com>' . "\r\n";
+			$headers .= 'Reply-To: '.$_POST['replier'] . "\r\n" .'X-Mailer: PHP/' . phpversion();
+   							
+			$sent = (mail( $to, $subject, $message, $headers) ? 1 : 0);
+			
+			$to = $_POST['poster'];
+		
+			$sent = (mail( $to, $subject, $message, $headers) ? $sent+1 : $sent);
+
+			if($sent == 2){
+				echo 'Your message has been sent.<br />';
+				echo 'A copy of the message was sent to you at <strong>'.$_POST['replier'].'</strong>.';
+			}
+			else
+				echo 'There was a problem sending your reply.';
+					
+		}
+	}
+?>
+</div>

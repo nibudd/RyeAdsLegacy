@@ -1,0 +1,13 @@
+<?php
+	require 'functions.php';
+	require 'classes.php';
+	
+	$testPage = new Page;
+	
+	$testPage->setKeyword('About');
+	$testPage->setDescription('About');
+	$testPage->setTitle('About');
+	$testPage->setMain('/home/ryeadsco/public_html/about.txt');
+	$testPage->writePage();
+		
+?>

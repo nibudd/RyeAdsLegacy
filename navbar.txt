@@ -1,0 +1,55 @@
+<div id='navBar'>
+	<ul>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=bikes">';?>Bikes</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=books">';?>Books</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=cars">';?>Cars</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=electronics">';?>Electronics</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=employment">';?>Employment</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=furniture">';?>Furniture</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=groupsandservices">';?>Groups & Services</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=housing">';?>Housing</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=musicvideoandsoftware">';?>Music, Video & Software</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=ridesharesandtransportation">';?>Rideshares & Transportation</a>
+		</li>
+		<li>
+			<?php echo '<a href="'.$_SERVER["PHP_SELF"].'?category=tutoringandlessons">';?>Tutoring & Lessons</a>
+		</li>
+		
+		<br />
+		<li>
+			<div class="fb-like" data-href="http://ryeads.com" data-send="true" data-layout="button_count" data-width="200" data-show-faces="false"></div>
+		</li>
+		<li>
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone"></div>
+
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+				(function() {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+				})();
+			</script>
+		</li>
+	</ul>
+</div>

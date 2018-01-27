@@ -1,0 +1,141 @@
+<div id='viewAd'>
+<?php
+		
+	// set page display variables
+	
+	$category = $_GET['category'];
+	$adsPerPage = 10;
+	
+	// display section title
+	
+	echo '<h3>';
+	
+	switch($category){
+		
+		case 'bikes':
+			echo 'Bikes';
+			break;
+			
+		case 'books':
+			echo 'Books';
+			break;
+		
+		case 'cars':
+			echo 'Cars';
+			break;
+		
+		case 'electronics':
+			echo 'Electronics';
+			break;
+			
+		case 'employment':
+			echo 'Employment';
+			break;
+		
+		case 'furniture':
+			echo 'Furniture';
+			break;
+			
+		case 'housing':
+			echo 'Housing';
+			break;
+			
+		case 'groupsandservices':
+			echo 'Groups & Services';
+			break;
+		
+		case 'musicvideoandsoftware':
+			echo 'Music, Video & Software';
+			break;
+			
+		case 'ridesharesandtransportation':
+			echo 'Rideshares & Transportation';
+			break;
+			
+		case 'tutoringandlessons':
+			echo 'Tutoring & Lessons';
+			break;
+		
+		default:
+			echo 'error in switch statement';		
+	}
+	
+	echo '</h3>';
+
+	// create initial query to determine how many rows and pages there are
+
+	$query = 'SELECT * FROM `adverts` WHERE `verified` = 1 AND `category` = \''.$category.'\' ORDER BY `date` DESC';
+
+	// execute query
+	
+	// create mysqli object
+	// open connection
+	
+	$mysqli = new mysqli($host, $user, $pass, $db);
+	
+	// check for connection errors
+	
+	if (mysqli_connect_errno()) die("Unable to connect!");
+
+	if ($result = $mysqli->query($query)) {
+
+    		// see how manay rows were returned
+    		
+    		$numRows = $result->num_rows;
+    		
+    		// free result set memory
+
+		$result->close();
+		
+		// free result set memory
+		
+		$mysqli->close();
+
+    		if ($numRows > 0) {
+
+	        	// yes
+	        	
+			// calculate number of pages
+			
+			for($totalPages = 1; $totalPages * $adsPerPage < $numRows; $totalPages++);
+			
+			// create query for selected page
+			
+			if(!isset($_GET['page'])){
+				
+				// create default (first page) query if no page has been selected
+	
+				$query = 'SELECT * FROM `adverts` WHERE `verified` = 1 AND `category` = \''.$category.'\' ORDER BY `date` DESC LIMIT 0,'.$adsPerPage;
+			}
+			else{
+				// create query for a selected page
+				
+				$startPoint = $adsPerPage * ($_GET['page'] - 1); // sets startpoint of query, query starts after indicated row
+				
+				$query = 'SELECT * FROM `adverts` WHERE `verified` = 1 AND `category` = \''.$category.'\' ORDER BY `date` DESC LIMIT '.$startPoint.','.$adsPerPage;
+			}
+			
+			// execute query
+	
+			$result = queryAndClose($query);
+				
+			// display and format ads
+			
+			displayPageLinks($totalPages, $category);
+						
+			displayAds($result);
+				
+			displayPageLinks($totalPages, $category);	
+		}
+		else{
+			// no
+			// print status message
+			echo '<p>There aren\'t any ads in this category.<br />Add one by clicking <a href="http://ryeads.com/index.html?category=submitpost">here</a></p>';
+		}
+	}
+	else {
+		// print error message
+		echo "Error in query: $query. ".$mysqli->error;
+	}
+?>
+</div>

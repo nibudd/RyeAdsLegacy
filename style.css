@@ -1,0 +1,250 @@
+body{
+	width:960px;
+	margin-left:auto;
+	margin-right:auto;
+	padding:0 0;
+	background-color:#d5ffff;
+	height:100%;
+	
+}
+
+h1{
+	font-size:3em;
+	margin-top:-0.5%;
+	font-family: "Rockwell Extra Bold", "Rockwell Bold", monospace;
+
+}
+
+h2{
+	margin-top:-3%;
+	margin-bottom:5%;
+	color:#B8B8B8;
+	
+}
+
+h3{
+	font-size:1.5em;
+	margin:2% 2% 2% 0;
+	
+}
+
+div{
+	
+}
+
+
+.ad{
+	margin:2% 2%;
+	background-color:#c9d4e8;
+	padding: 2% 2%;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px;
+	-moz-box-shadow:    3px 3px 5px 3px #1776BD;
+	-webkit-box-shadow: 3px 3px 5px 3px #1776BD;
+	box-shadow:         3px 3px 5px 3px #1776BD;
+}
+
+.adDate {
+	font-style:italic;
+	font-size:0.8em;
+}
+
+.adMessage{
+	margin:2% 7%;
+}
+
+.adReply{
+	text-align:right;
+	
+}
+
+.adReply a{
+	text-decoration:none;
+	color:blue;
+}
+
+.adReply a:hover{
+	text-decoration:underline;
+}
+
+.adTitle{
+	font-weight:bold;
+	font-size:1.25em;
+}
+
+.emailText{
+	width:30%;
+}
+
+.titleText{
+	width:65%;
+}
+
+#about{
+	padding-left:4.5%;
+	
+}
+
+#column{
+	float:left;
+	margin:0;
+	width:960px;
+	height:100%
+	
+}
+
+#contact{
+	padding-left:4.5%;
+}
+
+#editAd{
+	padding-left:4.5%;
+}
+
+#header{
+	background-color:#005a9c
+	width:960px;
+	height:150px;
+	float:left;
+	margin-bottom:1%;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px;
+}
+
+#header a{
+	margin-left:1.5%;
+	margin-right:1.5%;
+	text-decoration:none;
+	font-weight:bold;
+	color:black;
+}
+
+#header a:hover{
+	color:#efb30e;
+}
+
+#header a:last-child{
+	float:right;
+}
+
+#header a:last-child:hover{
+	color:#B8B8B8;
+}
+
+#header div:first-child{
+	display:inline-block;
+	float:left;
+	width:898px;
+	height:100%;
+	background-color:#1776BD;
+	border:none;
+	-webkit-border-top-left-radius: 15px;
+	-webkit-border-bottom-left-radius: 15px;
+	-moz-border-radius-topleft: 15px;
+	-moz-border-radius-bottomleft: 15px;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+
+#header div:first-child h1,h2,li{
+	margin-left:4.5%;
+}
+
+#header div:last-child{
+	width:60px;
+	display:inline-block;
+	float:right;
+	background-color:#efb30e;
+	height:100%;
+	border:none;
+	-webkit-border-top-right-radius: 15px;
+	-webkit-border-bottom-right-radius: 15px;
+	-moz-border-radius-topright: 15px;
+	-moz-border-radius-bottomright: 15px;
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+
+}
+
+#main{
+	display:inline-block;
+	width:700px;
+	float:right;
+	margin-right:1%;
+	background-color:#99b4d5;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px;
+	-moz-box-shadow:    3px 3px 5px 6px #1776BD;
+	-webkit-box-shadow: 3px 3px 5px 6px #1776BD;
+	box-shadow:         3px 3px 5px 6px #1776BD;
+	
+}
+
+#navBar {
+	display:inline-block;
+	width:220px;
+	float:left;
+	margin-left:10px;
+	padding-bottom:1em;
+	background-color:#c9d4e8;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px;
+	-moz-box-shadow:    3px 3px 5px 3px #1776BD;
+	-webkit-box-shadow: 3px 3px 5px 3px #1776BD;
+	box-shadow:         3px 3px 5px 3px #1776BD;
+}
+
+#navBar a{
+	text-decoration:none;
+	color:black;
+	font-weight:bold;
+}
+
+#navBar a:hover{
+	color:#005a9c;
+}
+
+#navBar ul{
+	list-style-type:none;
+	padding-left:12%;
+}
+
+#navBar li{
+	margin-top:4%;
+	margin-bottom:4%;
+}
+
+#pageList{
+	display:inline;
+	margin: 1%;
+}
+
+#replyAd form{
+	margin:2% 2%;
+}
+
+#submitAd{
+	padding-left:4.5%;
+}
+
+#viewAd > *{
+	margin-left:4%;
+
+}
+
+#viewAd h3{
+	font-size:1.5em;
+}
+
+#viewAd a{
+	text-decoration:none;
+	color:blue;
+}
+
+#viewAd a:hover{
+	text-decoration:underline;
+}

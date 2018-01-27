@@ -1,0 +1,125 @@
+<div id="editAd">
+	
+	<h3>Edit an Ad</h3>
+	
+	<?php
+		
+		// checks how many rows match the entered code
+		
+		if(isset($_GET['code'])){
+			
+			$query = 'SELECT * FROM `adverts` WHERE `code` = \''.$_GET['code'].'\'';
+			$result = queryAndClose($query);
+			$numRows = $result->num_rows;
+		}
+		
+		// executed if second form has been submitted
+		if(isset($_POST['submit2'])){
+			
+			// create query to either edit or delete a post based on the unique id
+				
+			if($_POST['postordelete'] == 'post'){
+				$_POST['title'] = str_replace("\'", "'", $_POST['title']);
+				$_POST['message'] = str_replace("\'", "'", $_POST['message']);
+				$query = 'UPDATE `adverts` SET `date` = NOW(), `title` = \''.str_replace("'", "\'", $_POST['title']).'\', `message` = \''.str_replace("'", "\'", $_POST['message']).'\', `category` = \''.$_POST['category'].'\', `verified` = \'1\' WHERE `id` = '.$_POST['id'].' LIMIT 1';
+			}
+			
+			else
+				$query = 'DELETE FROM `adverts` WHERE `id` = '.$_POST['id'].' LIMIT 1';				
+			
+			// executing query to bring up ad for entered code
+
+			$result = queryAndClose($query);
+							
+			if($_POST['postordelete'] == 'post')
+				echo 'Ad posted';
+			else
+				echo 'Ad deleted';
+			
+		}
+		else{
+			
+			// displays form for code to be entered
+			if($numRows == 0 or !isset($numRows)){
+				?>
+				
+					<!-- form will refresh page with the code variable inserted into the URL -->
+					<form action="<?php echo $_SERVER['PHP_SELF'].'?category='.$_GET['category'].'&code='.$_POST['code']; ?>" method="POST">
+					
+						<label for="code">Code: </label>
+						<input type="text" name="code"><?php if($numRows == 0 and isset($numRows)) echo 'Invalid code'; ?>
+						
+						<br /><br />
+						<input type="submit" name="submit" value="Submit">
+					</form>
+				<?php
+			}
+			
+			// displays after first submission - allows ad to be edited/posted or deleted
+			else{
+				
+				// makes use of code entered via url
+				
+				if(isset($_GET['code']))
+					$_POST['code'] = $_GET['code'];
+				
+				// create query to bring up ad corresponding to entered code
+				
+				$query = 'SELECT * FROM `adverts` WHERE `code` = \''.$_POST['code'].'\''; 
+				
+				// executing query to bring up ad for entered code
+				
+				$result = queryAndClose($query);
+				
+				// fetches result as an array
+				$row = $result->fetch_array();
+							
+				?>
+					<!-- form for editing previously entered ad message -->
+					<form action="<?php echo $_SERVER['PHP_SELF'].'?category='.$_GET['category'].'&code='.$_POST['code']; ?>" method="POST">
+						<label for="category">Category</label>
+						<br />
+						<select name="category">
+							<option value="bikes" <?php if($row['category'] == 'bikes') echo ' selected'; ?>>Bikes</option>
+							<option value="books" <?php if($row['category'] == 'books') echo ' selected'; ?>>Books</option>
+							<option value="cars" <?php if($row['category'] == 'cars') echo ' selected'; ?>>Cars</option>
+							<option value="electronics" <?php if($row['category'] == 'electronics') echo ' selected'; ?>>Electronics</option>
+							<option value="employment" <?php if($row['category'] == 'employment') echo ' selected'; ?>>Employment</option>
+							<option value="furniture" <?php if($row['category'] == 'furniture') echo ' selected'; ?>>Furniture</option>
+							<option value="groupsandservices" <?php if($row['category'] == 'groupsandservices') echo ' selected'; ?>>Groups & Services</option>
+							<option value="housing" <?php if($row['category'] == 'housing') echo ' selected'; ?>>Housing</option>
+							<option value="musicvideoandsoftware" <?php if($row['category'] == 'musicvideoandsoftware') echo ' selected'; ?>>Music, Video & Software</option>
+							<option value="ridesharesandtransportation" <?php if($row['category'] == 'ridesharesandtransportation') echo ' selected'; ?>>Rideshares & Transportation</option>
+							<option value="tutoringandlessons" <?php if($row['category'] == 'tutoringandlessons') echo ' selected'; ?>>Tutoring & Lessons</option>
+						</select>
+					
+						<br /><br />
+						<label for="title">Title</label>
+						<br />
+						<input class="titleText" type="text" name="title" value="<?php echo $row['title']; ?>">
+					
+						<br /><br />
+						<label for="message">Details</label>
+						<br />
+						<textarea cols="50" rows="5" name="message" ><?php echo $row['message']; ?></textarea>
+					
+						<br /><br />
+						Email: <strong><?php echo $row['poster']; ?></strong>
+						
+						<br /><br />
+						<input type="radio" name="postordelete" value="post" checked> Save and Post<br>
+						<input type="radio" name="postordelete" value="delete"> Delete<br>
+						
+						<br />
+						<input type="hidden" name="id" value=<?php echo $row['id']; ?>>
+					
+						<br />
+						<input type="submit" name="submit2" value="Submit">	
+					</from>	
+				<?php
+			}
+		}
+
+	?>
+	
+</div>
